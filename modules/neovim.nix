@@ -23,17 +23,4 @@
     viAlias = true;
     vimAlias = true;
   };
-
-  programs.git = {
-    enable = true;
-    config = {
-      user = {
-        name = "Jackson Baker";
-        email = "distractjax@gmail.com";
-      };
-      init = {
-        defaultBranch = "main";
-      };
-    };
-  };
 }
