@@ -25,11 +25,15 @@
       # for your storage machine have the same name (check this with "lsblk -f"). 
       # This will also make it easy to swap them out if the storage drive becomes corrupted.
       data_drive = "external_data";
+      # You can make the ssh port whatever you want, but it's a good idea to not use port 22
+      # because that's a common attack point. 2222 is a common alternative.
+      ssh_port = 2222;
 
       specialArgs = inputs // {
         inherit
           addresses
           data_drive
+          ssh_port
           user;
       };
     in

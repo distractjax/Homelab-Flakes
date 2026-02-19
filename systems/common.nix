@@ -1,7 +1,7 @@
 # This configuration file is used for almost every system (except the raspberry pi).
 # If you want some package on every computer (ex. git), then install it here.
 
-{ pkgs, user, ... }:
+{ pkgs, ssh_port, user, ... }:
 
 {
   # Enable nix command and flakes
@@ -82,7 +82,7 @@
     openssh = {
       enable = true;
       settings.PasswordAuthentication = false;
-      ports = [ 51364 ];
+      ports = [ ssh_port ];
       allowSFTP = true;
     };
   };
