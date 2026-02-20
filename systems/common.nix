@@ -57,6 +57,9 @@
       htop
       parted
       btrfs-progs
+      sops
+      age
+      ssh-to-age
     ];
   };
 
@@ -86,5 +89,49 @@
       allowSFTP = true;
     };
   };
-}
 
+  # Define custom systemd services.
+  systemd.services."sops-decrypt@" = {
+    description = "Decrypt SOPS secrets for %i";
+    path = with pkgs; [ sops ssh-to-age coreutils openssh ];
+    before = [ "pgadmin.service" "podman.service" ];
+    after = [ "network.target" ];
+    scriptArgs = "%i";
+    serviceConfig =
+      {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        User = "root";
+      };
+    script = ''
+      # %i is the string after the @
+      USER_NAME="$1"
+      SECRET_SOURCE="${../secrets}/$USER_NAME.env"
+      DEST_DIR="/run/secrets/$USER_NAME"
+      DEST_FILE="$DEST_DIR/secrets.env"
+
+      KEY_FILE="/run/secrets/decryption_key.txt"
+      mkdir -p /run/secrets
+      chmod 700 /run/secrets
+
+      mkdir -p "$DEST_DIR"
+      ssh-to-age -private-key -i /etc/ssh/ssh_host_ed25519_key > "$KEY_FILE"
+      chmod 600 "$KEY_FILE"
+
+      # Use the host SSH key to decrypt
+      export SOPS_AGE_KEY_FILE="$KEY_FILE"
+      if sops -d "$SECRET_SOURCE" > "$DEST_FILE"; then
+        echo "Decryption successful for $USER_NAME"
+      else
+        echo "Decryption failed for $USER_NAME"
+        rm -f "$KEY_FILE"
+        exit 1
+      fi
+
+      rm "$KEY_FILE"
+      chown -R "$USER_NAME" "$DEST_DIR"
+      chmod 700 "$DEST_DIR"
+      chmod 400 "$DEST_FILE"
+    '';
+  };
+}

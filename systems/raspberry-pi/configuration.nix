@@ -1,4 +1,4 @@
-{ pkgs, user, data_drive ... }:
+{ pkgs, user, data_drive, ... }:
 {
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -9,12 +9,14 @@
       grub.enable = false;
       generic-extlinux-compatible.enable = true;
     };
-    fileSystems = {
-      "/mnt/data_drive" = {
-        device = "/dev/disk/by-label/${data_drive}";
-        fsType = "btrfs";
-        options = [ "noatime" ];
-      };
+    supportedFilesystems = [ "btrfs" "nfs" ];
+  };
+
+  fileSystems = {
+    "/mnt/data_drive" = {
+      device = "/dev/disk/by-label/${data_drive}";
+      fsType = "btrfs";
+      options = [ "noatime" ];
     };
   };
 

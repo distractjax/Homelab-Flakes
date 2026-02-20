@@ -1,0 +1,18 @@
+keys:
+  - &beast age1lsyumn6egehxgkqzhae8drjwgcy7jxkhrsx2geg48a2zq83gsc7q6qs593
+  - &pods1 age1r8a6kfpkfhnreshhctqfaymklr9h3gsg6gjhqc9lns4drelt5vfqaz34p5
+  - &pods2 age1r8a6kfpkfhnreshhctqfaymklr9h3gsg6gjhqc9lns4drelt5vfqaz34p5
+  - &raspberry-pi
+  - &storage age1sm39hr7207akz9whpemfy7gma9c3uaqt6amqrh4cmzw7e5wr6uxqaar79s
+  - &admin age1f50479za5ugjs6a6hgelmw0e33c48nyrscsq7ck58zy8ku0kfp7q5v44fg
+
+creation_rules:
+  - path_regex: secrets/.*\.env$
+    key_groups: 
+      - age:
+        - *beast
+        - *pods1
+        - *pods2
+        - *raspberry-pi
+        - *storage
+        - *admin
