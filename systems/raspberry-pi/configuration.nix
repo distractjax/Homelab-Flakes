@@ -36,7 +36,7 @@
     firewall = {
       enable = true;
       allowPing = true;
-      allowedTCPPorts = [ 3001 8384 ];
+      allowedTCPPorts = [ 3000 3001 8384 ];
       allowedUDPPorts = [ ];
       checkReversePath = "loose";
     };

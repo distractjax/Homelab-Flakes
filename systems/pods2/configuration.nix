@@ -11,6 +11,7 @@
     firewall = {
       allowedTCPPorts = [
         2222
+        2375
         3000
         8080
         8083
